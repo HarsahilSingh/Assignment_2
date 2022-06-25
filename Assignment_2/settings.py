@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-+=d#mh2t%l!h1cb(&c-r0k$n@%^1jpt-lp93&xaypfntd!9p6c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['gradebookjs.herokuapp.com']
 
 
 # Application definition
