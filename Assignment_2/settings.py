@@ -63,13 +63,13 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.IsAdminUser'
-        # 'rest_framework.permissions.AllowAny'
+        # 'rest_framework.permissions.IsAdminUser'
+        # # 'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ]
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
     #     'rest_framework.authentication.BasicAuthentication',

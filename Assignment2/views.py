@@ -9,7 +9,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -25,7 +25,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = courseSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated,IsAdminUser]
 
 
 class SemesterViewSet(viewsets.ModelViewSet):
