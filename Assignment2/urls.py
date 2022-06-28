@@ -3,7 +3,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 
 from Assignment2.views import Index, CourseViewSet, SemesterViewSet, LecturerViewSet, ClassViewSet, StudentViewSet, \
-    StudentEnrollmentViewSet
+    StudentEnrollmentViewSet, CustomAuthToken
 
 router = DefaultRouter()
 router.register('course',CourseViewSet,"course")
@@ -17,7 +17,8 @@ router.register('studentEnollment',StudentEnrollmentViewSet,"studentEnrollment")
 urlpatterns = [
     path('', Index, name="home"),
     path('api/', include(router.urls)),
-    path('auth/',obtain_auth_token)
+    path('auth/',obtain_auth_token),
+    path('login/', CustomAuthToken.as_view()),
 ]
 
 
