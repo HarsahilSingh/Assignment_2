@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-+=d#mh2t%l!h1cb(&c-r0k$n@%^1jpt-lp93&xaypfntd!9p6c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['gradebookjs.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1',
+    'gradebookjs.herokuapp.com']
 
 
 # Application definition
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'Assignment2',
     'rest_framework',
     'ckeditor',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'corsheaders'
 
 ]
 
@@ -53,28 +55,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework.permissions.IsAdminUser'
-        # # 'rest_framework.permissions.AllowAny'
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-       'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
     ]
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ]
 }
 
 ROOT_URLCONF = 'Assignment_2.urls'
