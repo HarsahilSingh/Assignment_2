@@ -9,18 +9,18 @@ from Assignment2.models import *
 class courseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['code', 'name']
+        fields = ['id', 'code', 'name']
 
 class semesterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Semester
-        fields = ['year', 'semester','courses']
+        fields = '__all__'
 
 
 class lecturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecturer
-        fields = ['staffID', 'first_Name','last_Name','email','course','dateOfBirth']
+        fields = ['id','staffID', 'first_Name','last_Name','email','course','dateOfBirth']
 
         extra_Kwargs = {
             'first_Name':{
@@ -60,13 +60,13 @@ class lecturerSerializer(serializers.ModelSerializer):
 class classSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
-        fields = ['number', 'semester','course','lecturer']
+        fields = '__all__'
 
 
 class studentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['studentID', 'first_Name','last_Name','email','dateOfBirth']
+        fields = ['id','studentID', 'first_Name','last_Name','email','dateOfBirth']
 
         extra_Kwargs = {
             'password': {
@@ -100,6 +100,6 @@ class studentSerializer(serializers.ModelSerializer):
 class studentEnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentEnrollment
-        fields = ['student_id', 'class_id','grade','gradeTime']
+        fields = '__all__'
 
 
