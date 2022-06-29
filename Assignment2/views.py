@@ -1,5 +1,8 @@
 import mixins as mixins
+from django.core.files.storage import FileSystemStorage
+from django.core.mail import send_mail
 from django.http import HttpResponse, JsonResponse
+from django.utils import timezone
 from rest_framework import status, generics, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -72,6 +75,7 @@ class StudentEnrollmentViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = [IsAuthenticated]
 
+
     def get_queryset(self):
         groups = self.request.user.groups.values_list('name', flat=True)
         if self.request.user.is_superuser:
@@ -98,6 +102,76 @@ class StudentEnrollmentViewSet(viewsets.ModelViewSet):
         elif 'student' in groups:
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+    def gradebook_grade_student(request):
+        id = request.POST.get("id")
+        grade = request.POST.get("grade")
+        try:
+            studentEnrolment = StudentEnrollment.objects.get(id=id)
+            studentEnrolment.grade = grade
+            studentEnrolment.gradeTime = timezone.now()
+            studentEnrolment.save()
+            senderemail = 'singhh59@myunitec.ac.nz'
+            send_mail('Class Grade Notification', 'Your grade has been published! \nPlease check in gradebook :).',
+                      senderemail, [studentEnrolment.student_id.email], fail_silently=False)
+            message = "Student " + studentEnrolment.student_id.first_Name + " graded successfully!"
+        except Exception as e:
+            message = "Could not grade " + studentEnrolment.student_id.first_Name + "!" + str(e)
+
+        context = {
+            "message": message,
+            "studentEnrolment": studentEnrolment
+        }
+        return HttpResponse(status=status.HTTP_202_ACCEPTED)
+
+    # for adding the student files
+
+    def file_upload(request):
+        if request.method == 'POST' and request.FILES['myfile']:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+
+            import pandas as pd
+            excel_data = pd.read_excel(myfile)
+            data = pd.DataFrame(excel_data)
+            ids = data["ID"].tolist()
+            firstnames = data["Firstname"].tolist()
+            lastnames = data["Lastname"].tolist()
+            emails = data["Email"].tolist()
+            dobs = data["DOB"].tolist()
+            courses = data["Course"].tolist()
+            classes = data["Class"].tolist()
+            i = 0
+            while i < len(ids):
+                id = ids[i]
+                firstname = firstnames[i]
+                lastname = lastnames[i]
+                email = emails[i]
+                dob = dobs[i]
+                course = courses[i]
+                classs = classes[i]
+                enrolTime = timezone.now()
+
+                user = User.objects.create_user(username=firstname.lower())
+                user.set_password(firstname.lower())
+                user.first_name = firstname
+                user.last_name = lastname
+                user.email = email
+                student_group = Group.objects.get(name='Student')
+                user.groups.add(student_group)
+                user.save()
+                student = Student(user=user, studentID=id, first_Name=firstname, last_Name=lastname, email=email,
+                                  dateOfBirth=dob)
+                # class1 = Class.objects.get(number=classs)
+                student.save()
+                # studentEnrolment = StudentEnrollment(student_id=student,class_id=class1,enrollTime=enrolTime)
+                # studentEnrolment.save
+
+                i = i + 1
+
+                return HttpResponse(status=status.HTTP_202_ACCEPTED)
 
 
 class CustomAuthToken(ObtainAuthToken):
